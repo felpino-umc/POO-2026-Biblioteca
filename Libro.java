@@ -10,6 +10,11 @@ public class Libro {
     // Atributo estático (compartido por todos los objetos de la clase Libro)
     static int totalLibros = 0;
 
+    // agregar constructor vacío para permitir la creación de objetos sin parámetros
+    public Libro() {
+        // Constructor vacío
+    }
+
     // Constructor para inicializar el libro (por defecto se crea disponible)
     public Libro(String titulo, String isbn, int anioPublicacion, Autor autor) {
         this.titulo = titulo;

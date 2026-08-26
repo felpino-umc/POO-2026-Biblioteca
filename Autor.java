@@ -5,6 +5,11 @@ public class Autor {
     String nacionalidad;
     int anioNacimiento;
 
+    // Agregar constructor vacío para permitir la creación de objetos sin parámetros    
+    public Autor() {
+        // Constructor vacío
+    }
+
     // Constructor para inicializar los atributos al crear el objeto
     public Autor(String nombre, String nacionalidad, int anioNacimiento) {
         this.nombre = nombre;

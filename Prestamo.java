@@ -21,6 +21,7 @@ public class Prestamo {
     // Método para mostrar la información en consola
     void mostrarInfo() {
         // Imprime: "Préstamo: [titulo del libro] a [nombre del socio] el [fecha] devuelto: [si/no]"[cite: 1]
-        System.out.println("Préstamo: " + libro.titulo + " a " + socio.nombre +  " el " + fechaPrestamo + " devuelto: " + devuelto);[cite: 1]
+        System.out.println("Préstamo: " + libro.titulo + " a " + socio.nombre +  " el " + fechaPrestamo + " devuelto: " + devuelto);
+        
     }
 }
