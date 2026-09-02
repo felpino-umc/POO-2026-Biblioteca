@@ -1,30 +1,26 @@
-public class Autor {
-    
-    // Atributos declarados correctamente con camelCase y sus tipos
-    String nombre;
-    String nacionalidad;
-    int anioNacimiento;
+import java.time.Year;
 
-    // Agregar constructor vacío para permitir la creación de objetos sin parámetros    
-    public Autor() {
-        // Constructor vacío
-    }
+public class Autor extends Persona {
+    // Atributos propios de Autor
+    private String nacionalidad;
+    private int anioNacimiento;
 
-    // Constructor para inicializar los atributos al crear el objeto
+    // Constructor parametrizado
     public Autor(String nombre, String nacionalidad, int anioNacimiento) {
-        this.nombre = nombre;
+        super(nombre); // Llama al constructor de Persona para asignar 'nombre'
         this.nacionalidad = nacionalidad;
         this.anioNacimiento = anioNacimiento;
     }
 
-    // Método para mostrar la información por consola
-    void mostrarInfo() {
-        System.out.println(nombre + " | " + nacionalidad + " | " + anioNacimiento);
+    // Cálculo de edad
+    public int calcularEdad() {
+        int anioActual = Year.now().getValue();
+        return anioActual - this.anioNacimiento;
     }
 
-    // Método para calcular la edad usando el año actual (2026)
-    int calcularEdad() {
-        int anioActual = 2026; 
-        return anioActual - anioNacimiento;
+    // Sobrescritura de toString() reutilizando la clase madre (Persona)
+    @Override
+    public String toString() {
+        return super.toString() + " | " + nacionalidad + " | " + anioNacimiento;
     }
 }
