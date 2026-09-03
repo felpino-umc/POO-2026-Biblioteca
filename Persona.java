@@ -17,4 +17,8 @@ public class Persona {
     public void presentarse() {
         System.out.println("Hola, soy " + nombre);
     }
+
+    public void mostrarInfo() {
+        System.out.println(toString());
+    }
 }

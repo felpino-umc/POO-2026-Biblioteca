@@ -14,8 +14,11 @@ public class Prestamo {
 
     // Método para registrar la devolución
     void registrarDevolucion() {
-        devuelto = true; // 1) deja "devuelto" en true[cite: 1]
-        libro.devolver(); // 2) le avisa al libro que ya está disponible de nuevo[cite: 1]
+        if (!devuelto) {
+            devuelto = true;
+            libro.devolver();
+            socio.registrarDevolucion();
+        }
     }
 
     // Método para mostrar la información en consola
