@@ -1,61 +1,70 @@
 public class Libro {
 
-    // Atributos de instancia
+    // Atributos propios de Libro.
     String titulo;
     String isbn;
     int anioPublicacion;
     boolean disponible;
-    Autor autor; // Asociación: Un Libro "tiene un" Autor
+    Autor autor; // Asociacion: un Libro tiene un Autor.
 
-    // Atributo estático (compartido por todos los objetos de la clase Libro)
+    // Contador compartido por todos los objetos Libro.
     static int totalLibros = 0;
 
-    // agregar constructor vacío para permitir la creación de objetos sin parámetros
+    // Constructor vacio conservado para mantener compatibilidad con la C1.
     public Libro() {
-        // Constructor vacío
     }
 
-    // Constructor para inicializar el libro (por defecto se crea disponible)
+    // Constructor parametrizado. Cada libro se crea disponible por defecto.
     public Libro(String titulo, String isbn, int anioPublicacion, Autor autor) {
         this.titulo = titulo;
         this.isbn = isbn;
         this.anioPublicacion = anioPublicacion;
-        this.disponible = true; // Al crearse, está disponible por defecto
+        this.disponible = true;
         this.autor = autor;
-
-        // Incrementamos el contador global cada vez que se instancia un libro
         totalLibros++;
     }
 
-    // Método para mostrar la información del libro y de su autor
+    // Muestra la informacion del libro y utiliza el toString() de Autor.
     void mostrarInfo() {
-        System.out.println("Libro: " + titulo + " | ISBN: " + isbn + " | Año: " + anioPublicacion + " | Disponible: "
-                + disponible);
-        System.out.print("-> Autor: ");
+        System.out.println(
+                "Libro: " + titulo
+                        + " | ISBN: " + isbn
+                        + " | Anio: " + anioPublicacion
+                        + " | Disponible: " + disponible
+        );
+
         if (autor != null) {
-            autor.mostrarInfo(); // Llamamos al método de la clase Autor
+            System.out.println("-> Autor: " + autor);
         } else {
-            System.out.println("Sin autor asignado");
+            System.out.println("-> Autor: Sin autor asignado");
         }
     }
 
-    // Método para prestar el libro (cambia disponible a false)
+    // Cambia el estado del libro cuando se realiza un prestamo.
     void prestar() {
         if (disponible) {
             disponible = false;
-            System.out.println("¡El libro \"" + titulo + "\" ha sido prestado con éxito!");
+            System.out.println(
+                    "El libro \"" + titulo + "\" ha sido prestado con exito."
+            );
         } else {
-            System.out.println("Lo sentimos, el libro \"" + titulo + "\" ya está prestado.");
+            System.out.println(
+                    "El libro \"" + titulo + "\" ya esta prestado."
+            );
         }
     }
 
-    // Método para devolver el libro (cambia disponible a true)
+    // Cambia el estado del libro cuando se registra una devolucion.
     void devolver() {
         if (!disponible) {
             disponible = true;
-            System.out.println("¡El libro \"" + titulo + "\" ha sido devuelto!");
+            System.out.println(
+                    "El libro \"" + titulo + "\" ha sido devuelto."
+            );
         } else {
-            System.out.println("El libro \"" + titulo + "\" ya se encontraba disponible en la biblioteca.");
+            System.out.println(
+                    "El libro \"" + titulo + "\" ya estaba disponible."
+            );
         }
     }
 }
