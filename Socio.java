@@ -4,12 +4,17 @@ public class Socio extends Persona {
     private int numeroSocio;
     private String email;
     private int librosPrestadosActuales;
-    
+
     // Si mantienes el contador global de socios de C1:
     private static int totalSocios = 0;
     private static final int MAX_LIBROS = 3; // Límite típico de préstamos
 
-    // Constructor parametrizado
+    // Constructor vacío (sobrecarga #1)
+    public Socio() {
+        super();
+    }
+
+    // Constructor parametrizado (sobrecarga #2)
     public Socio(String nombre, int numeroSocio, String email) {
         super(nombre); // Llama al constructor de Persona pasándole el nombre
         this.numeroSocio = numeroSocio;
@@ -37,8 +42,8 @@ public class Socio extends Persona {
     // Sobrescritura de toString() reutilizando la lógica de la clase padre
     @Override
     public String toString() {
-        return super.toString() + " | Socio #" + this.numeroSocio 
-                + " | " + this.email 
+        return super.toString() + " | Socio #" + this.numeroSocio
+                + " | " + this.email
                 + " | Libros prestados: " + this.librosPrestadosActuales;
     }
 
@@ -63,7 +68,18 @@ public class Socio extends Persona {
         return librosPrestadosActuales;
     }
 
+    public void setLibrosPrestadosActuales(int librosPrestadosActuales) {
+        this.librosPrestadosActuales = librosPrestadosActuales;
+    }
+
     public static int getTotalSocios() {
         return totalSocios;
+    }
+
+    // Implementación del método abstracto de Persona: comportamiento propio de Socio
+    @Override
+    void mostrarRol() {
+        System.out.println(getNombre() + " participa como SOCIO #" + numeroSocio
+                + ": puede solicitar préstamos en la biblioteca.");
     }
 }
