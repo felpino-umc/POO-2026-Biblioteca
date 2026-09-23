@@ -5,10 +5,32 @@ public class Autor extends Persona {
     private String nacionalidad;
     private int anioNacimiento;
 
-    // Constructor parametrizado
+    // Constructor vacío (sobrecarga #1)
+    public Autor() {
+        super();
+    }
+
+    // Constructor parametrizado (sobrecarga #2)
     public Autor(String nombre, String nacionalidad, int anioNacimiento) {
         super(nombre); // Llama al constructor de Persona para asignar 'nombre'
         this.nacionalidad = nacionalidad;
+        this.anioNacimiento = anioNacimiento;
+    }
+
+    // Getters y setters
+    public String getNacionalidad() {
+        return nacionalidad;
+    }
+
+    public void setNacionalidad(String nacionalidad) {
+        this.nacionalidad = nacionalidad;
+    }
+
+    public int getAnioNacimiento() {
+        return anioNacimiento;
+    }
+
+    public void setAnioNacimiento(int anioNacimiento) {
         this.anioNacimiento = anioNacimiento;
     }
 
@@ -23,4 +45,10 @@ public class Autor extends Persona {
     public String toString() {
         return super.toString() + " | " + nacionalidad + " | " + anioNacimiento;
     }
-}
+
+    // Implementación del método abstracto de Persona: comportamiento propio de Autor
+    @Override
+    void mostrarRol() {
+        System.out.println(getNombre() + " participa como AUTOR: escribe los libros del catálogo.");
+    }
+}

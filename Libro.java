@@ -1,11 +1,11 @@
 public class Libro {
 
     // Atributos propios de Libro.
-    String titulo;
-    String isbn;
-    int anioPublicacion;
-    boolean disponible;
-    Autor autor; // Asociacion: un Libro tiene un Autor.
+    private String titulo;
+    private String isbn;
+    private int anioPublicacion;
+    private boolean disponible;
+    private Autor autor; // Asociacion: un Libro tiene un Autor.
 
     // Contador compartido por todos los objetos Libro.
     static int totalLibros = 0;
@@ -22,6 +22,51 @@ public class Libro {
         this.disponible = true;
         this.autor = autor;
         totalLibros++;
+    }
+
+    // Getters y setters
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
+
+    public int getAnioPublicacion() {
+        return anioPublicacion;
+    }
+
+    public void setAnioPublicacion(int anioPublicacion) {
+        this.anioPublicacion = anioPublicacion;
+    }
+
+    public boolean isDisponible() {
+        return disponible;
+    }
+
+    public void setDisponible(boolean disponible) {
+        this.disponible = disponible;
+    }
+
+    public Autor getAutor() {
+        return autor;
+    }
+
+    public void setAutor(Autor autor) {
+        this.autor = autor;
+    }
+
+    public static int getTotalLibros() {
+        return totalLibros;
     }
 
     // Muestra la informacion del libro y utiliza el toString() de Autor.
