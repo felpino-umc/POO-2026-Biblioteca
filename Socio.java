@@ -6,7 +6,7 @@ public class Socio extends Persona {
     private int librosPrestadosActuales;
 
     // Si mantienes el contador global de socios de C1:
-    private static int totalSocios = 0; //static tiene que ver con polimorfismo. este atributo es compartido y sus instancias no lo alteran.
+    private static int totalSocios = 0; //static significa que el atributo pertenece a la clase y no al objeto.
     private static final int MAX_LIBROS = 3; // Límite típico de préstamos static final es una constante compartida por todas las instancias que se creen
 
     // Constructor vacío (sobrecarga #1)
