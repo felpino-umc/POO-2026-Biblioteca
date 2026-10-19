@@ -68,9 +68,6 @@ public class Socio extends Persona {
         return librosPrestadosActuales;
     }
 
-    public void setLibrosPrestadosActuales(int librosPrestadosActuales) {
-        this.librosPrestadosActuales = librosPrestadosActuales;
-    }
 
     public static int getTotalSocios() {
         return totalSocios;
@@ -78,7 +75,7 @@ public class Socio extends Persona {
 
     // Implementación del método abstracto de Persona: comportamiento propio de Socio
     @Override
-    void mostrarRol() {
+    public void mostrarRol() {
         System.out.println(getNombre() + " participa como SOCIO #" + numeroSocio
                 + ": puede solicitar préstamos en la biblioteca.");
     }

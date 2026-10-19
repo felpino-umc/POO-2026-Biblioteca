@@ -1,6 +1,4 @@
 /* package POO-2026-Biblioteca;*/
-//revision git 
-// Omitimos la línea del package por ahora para no tener problemas al compilar por consola
 
 import java.time.LocalDate;
 
@@ -15,41 +13,56 @@ public class Prestamo {
 
     // -- CONSTRUCTOR ---
     public Prestamo(Libro libro, Socio socio, LocalDate fechaPrestamo) {
+
+        if(libro == null || socio == null || fechaPrestamo == null) {
+            throw new IllegalArgumentException("NINGUN CAMPO PUEDE SER NULO.");
+        } 
+       
+        // un sout () return.
+        // no cancela la creacion del objeto invalido.
         this.libro = libro;
         this.socio = socio;
         this.fechaPrestamo = fechaPrestamo;
     }
-    // Constructor vacio para explicar sobrecarga de constructores y el uso de setters
-    //setters para asignar valores de una instancia que ya existe (ojito setter no es lo mismo que constructor)
-    public Prestamo() {
 
-    }
+    
 
     // Getters y setters
+
+
     public Libro getLibro() {
         return libro;
     }
 
-    public void setLibro(Libro libro) {
-        this.libro = libro;
-    }
-    
+       
     public Socio getSocio() {
         return socio;
     }
 
-    public void setSocio(Socio socio) {
-        this.socio = socio;
-    }
 
     public LocalDate getFechaPrestamo() {
         return fechaPrestamo;
     }
 
     public void setFechaPrestamo(LocalDate fechaPrestamo) {
+        if (fechaPrestamo == null || fechaPrestamo.isAfter(LocalDate.now())) {
+            throw new IllegalArgumentException("La fecha de préstamo no puede ser nula ni ser del futuro.");
+        }
         this.fechaPrestamo = fechaPrestamo;
-    }
-    //no agrego getter y setter para devuelto porque no quiero que se pueda cambiar el estado de devuelto desde afuera, solo desde registrarDevolucion
+
+        // --LocalDate una joya de libreria. aca sirve el metodo isAfter
+        // Y en las creaciones de prestamos del Main usamos LocalDate.of
+        // tambien puede ser LocalDate.now()
+
+
+    } 
+    // este lo voy a eliminar si es que mas adelante
+    // inventamos un tiempo limite de plazo para los prestamos.
+    //eliminamos set de libro y socio el metodo de registrar prestamo
+    // las devoluciones
+    // son para modificar sus estados 
+    
+
     // --- MÉTODOS ---
 
     // Método para registrar el préstamo
@@ -101,6 +114,6 @@ public class Prestamo {
         System.out.println("Préstamo de libro: " + libro.getTitulo());
         System.out.println("Socio: " + socio.getNombre());
         System.out.println("Fecha de préstamo: " + fechaPrestamo);
-        System.out.println("Estado: " + (devuelto ? "Devuelto" : "No devuelto")); //esta parte la tiro copilot pero es un  if/else mas chico 
+        System.out.println("Estado: " + (devuelto ? "Devuelto" : "No devuelto")); // if/else mas chico 
     }
 }
