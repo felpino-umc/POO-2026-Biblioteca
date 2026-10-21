@@ -1,24 +1,20 @@
-public class Socio extends Persona {
+public class Socio extends Persona implements Buscable {
 
     // Atributos propios de Socio (nombre se hereda de Persona)
-    private int numeroSocio;
+    private final int numeroSocio; // final: identifica al socio y no cambia después de crearlo
     private String email;
     private int librosPrestadosActuales;
 
     // Si mantienes el contador global de socios de C1:
     private static int totalSocios = 0; //static significa que el atributo pertenece a la clase y no al objeto.
-    private static final int MAX_LIBROS = 3; // Límite típico de préstamos static final es una constante compartida por todas las instancias que se creen
+    // static: una sola copia para toda la clase; final: su valor no cambia. Es una regla común a todos los socios.
+    private static final int MAX_LIBROS = 3;
 
-    // Constructor vacío (sobrecarga #1)
-    public Socio() {
-        super();
-    }
-
-    // Constructor parametrizado (sobrecarga #2)
+    // No hay constructor vacío: numeroSocio es final y debe asignarse siempre al crear el socio.
     public Socio(String nombre, int numeroSocio, String email) {
         super(nombre); // Llama al constructor de Persona pasándole el nombre
         this.numeroSocio = numeroSocio;
-        this.email = email;
+        setEmail(email); // reutiliza la validación del setter
         this.librosPrestadosActuales = 0;
         totalSocios++;
     }
@@ -52,15 +48,14 @@ public class Socio extends Persona {
         return numeroSocio;
     }
 
-    public void setNumeroSocio(int numeroSocio) {
-        this.numeroSocio = numeroSocio;
-    }
-
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
+        if (email == null || email.isBlank() || !email.contains("@")) {
+            throw new IllegalArgumentException("El email no puede estar vacío y debe contener '@'");
+        }
         this.email = email;
     }
 
@@ -68,6 +63,13 @@ public class Socio extends Persona {
         return librosPrestadosActuales;
     }
 
+    public void setLibrosPrestadosActuales(int librosPrestadosActuales) {
+        if (librosPrestadosActuales < 0 || librosPrestadosActuales > MAX_LIBROS) {
+            throw new IllegalArgumentException(
+                    "Los libros prestados deben estar entre 0 y " + MAX_LIBROS);
+        }
+        this.librosPrestadosActuales = librosPrestadosActuales;
+    }
 
     public static int getTotalSocios() {
         return totalSocios;
@@ -78,5 +80,13 @@ public class Socio extends Persona {
     public void mostrarRol() {
         System.out.println(getNombre() + " participa como SOCIO #" + numeroSocio
                 + ": puede solicitar préstamos en la biblioteca.");
+    }
+
+    // Implementación de Buscable: un socio se encuentra por nombre o email
+    @Override
+    public boolean coincideCon(String termino) {
+        String buscado = termino.toLowerCase();
+        return getNombre().toLowerCase().contains(buscado)
+                || email.toLowerCase().contains(buscado);
     }
 }
