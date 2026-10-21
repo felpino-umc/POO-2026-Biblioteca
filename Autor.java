@@ -13,8 +13,8 @@ public class Autor extends Persona {
     // Constructor parametrizado (sobrecarga #2)
     public Autor(String nombre, String nacionalidad, int anioNacimiento) {
         super(nombre); // Llama al constructor de Persona para asignar 'nombre'
-        this.nacionalidad = nacionalidad;
-        this.anioNacimiento = anioNacimiento;
+        setNacionalidad(nacionalidad); // reutiliza la validación del setter
+        setAnioNacimiento(anioNacimiento); // reutiliza la validación del setter
     }
 
     // Getters y setters
@@ -23,6 +23,9 @@ public class Autor extends Persona {
     }
 
     public void setNacionalidad(String nacionalidad) {
+        if (nacionalidad == null || nacionalidad.isBlank()) {
+            throw new IllegalArgumentException("La nacionalidad no puede estar vacía");
+        }
         this.nacionalidad = nacionalidad;
     }
 
@@ -31,6 +34,10 @@ public class Autor extends Persona {
     }
 
     public void setAnioNacimiento(int anioNacimiento) {
+        if (anioNacimiento < 1 || anioNacimiento > Year.now().getValue()) {
+            throw new IllegalArgumentException(
+                    "El año de nacimiento debe estar entre 1 y " + Year.now().getValue());
+        }
         this.anioNacimiento = anioNacimiento;
     }
 
@@ -51,4 +58,4 @@ public class Autor extends Persona {
     void mostrarRol() {
         System.out.println(getNombre() + " participa como AUTOR: escribe los libros del catálogo.");
     }
-}
+}
