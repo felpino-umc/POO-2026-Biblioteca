@@ -1,26 +1,29 @@
-public class Libro {
+import java.time.Year;
+
+// Libro cumple dos contratos a la vez: se puede prestar y se puede buscar.
+public class Libro implements Prestable, Buscable {
 
     // Atributos propios de Libro.
     private String titulo;
-    private String isbn;
+    private final String isbn; // final: identifica al libro y no cambia despues de crearlo
     private int anioPublicacion;
     private boolean disponible;
     private Autor autor; // Asociacion: un Libro tiene un Autor.
 
     // Contador compartido por todos los objetos Libro.
-    static int totalLibros = 0;
+    private static int totalLibros = 0;
 
-    // Constructor vacio conservado para mantener compatibilidad con la C1.
-    public Libro() {
-    }
-
-    // Constructor parametrizado. Cada libro se crea disponible por defecto.
+    // No hay constructor vacio: isbn es final y debe asignarse siempre al crear el libro.
+    // Cada libro se crea disponible por defecto.
     public Libro(String titulo, String isbn, int anioPublicacion, Autor autor) {
-        this.titulo = titulo;
+        if (isbn == null || isbn.isBlank()) {
+            throw new IllegalArgumentException("El ISBN no puede estar vacio");
+        }
         this.isbn = isbn;
-        this.anioPublicacion = anioPublicacion;
+        setTitulo(titulo); // los setters reutilizan su validacion
+        setAnioPublicacion(anioPublicacion);
+        setAutor(autor);
         this.disponible = true;
-        this.autor = autor;
         totalLibros++;
     }
 
@@ -30,6 +33,9 @@ public class Libro {
     }
 
     public void setTitulo(String titulo) {
+        if (titulo == null || titulo.isBlank()) {
+            throw new IllegalArgumentException("El titulo no puede estar vacio");
+        }
         this.titulo = titulo;
     }
 
@@ -37,24 +43,22 @@ public class Libro {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
-        this.isbn = isbn;
-    }
-
     public int getAnioPublicacion() {
         return anioPublicacion;
     }
 
     public void setAnioPublicacion(int anioPublicacion) {
+        if (anioPublicacion < 1 || anioPublicacion > Year.now().getValue()) {
+            throw new IllegalArgumentException(
+                    "El anio de publicacion debe estar entre 1 y " + Year.now().getValue());
+        }
         this.anioPublicacion = anioPublicacion;
     }
 
+    // Sin setDisponible: el estado solo cambia con prestar() y devolver().
+    @Override
     public boolean isDisponible() {
         return disponible;
-    }
-
-    public void setDisponible(boolean disponible) {
-        this.disponible = disponible;
     }
 
     public Autor getAutor() {
@@ -62,6 +66,9 @@ public class Libro {
     }
 
     public void setAutor(Autor autor) {
+        if (autor == null) {
+            throw new IllegalArgumentException("El libro debe tener un autor");
+        }
         this.autor = autor;
     }
 
@@ -77,16 +84,12 @@ public class Libro {
                         + " | Anio: " + anioPublicacion
                         + " | Disponible: " + disponible
         );
-
-        if (autor != null) {
-            System.out.println("-> Autor: " + autor);
-        } else {
-            System.out.println("-> Autor: Sin autor asignado");
-        }
+        System.out.println("-> Autor: " + autor);
     }
 
     // Cambia el estado del libro cuando se realiza un prestamo.
-    void prestar() {
+    @Override
+    public void prestar() {
         if (disponible) {
             disponible = false;
             System.out.println(
@@ -100,7 +103,8 @@ public class Libro {
     }
 
     // Cambia el estado del libro cuando se registra una devolucion.
-    void devolver() {
+    @Override
+    public void devolver() {
         if (!disponible) {
             disponible = true;
             System.out.println(
@@ -111,5 +115,14 @@ public class Libro {
                     "El libro \"" + titulo + "\" ya estaba disponible."
             );
         }
+    }
+
+    // Un libro se encuentra por titulo, ISBN o nombre de su autor.
+    @Override
+    public boolean coincideCon(String termino) {
+        String buscado = termino.toLowerCase();
+        return titulo.toLowerCase().contains(buscado)
+                || isbn.toLowerCase().contains(buscado)
+                || autor.getNombre().toLowerCase().contains(buscado);
     }
 }
