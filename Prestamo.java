@@ -8,7 +8,7 @@ public class Prestamo {
     private Libro libro; 
     private Socio socio; 
     private LocalDate fechaPrestamo;
-    private boolean devuelto = false; // esto para que cuando se cree un préstamo, por defecto no esté devuelto.
+    private boolean devuelto = false;
     private boolean activo = false;
 
     // -- CONSTRUCTOR ---
@@ -17,18 +17,12 @@ public class Prestamo {
         if(libro == null || socio == null || fechaPrestamo == null) {
             throw new IllegalArgumentException("NINGUN CAMPO PUEDE SER NULO.");
         } 
-       
-        // un sout () return.
-        // no cancela la creacion del objeto invalido.
         this.libro = libro;
         this.socio = socio;
         this.fechaPrestamo = fechaPrestamo;
     }
 
-    
-
     // Getters y setters
-
 
     public Libro getLibro() {
         return libro;
@@ -38,7 +32,6 @@ public class Prestamo {
     public Socio getSocio() {
         return socio;
     }
-
 
     public LocalDate getFechaPrestamo() {
         return fechaPrestamo;
@@ -50,21 +43,7 @@ public class Prestamo {
         }
         this.fechaPrestamo = fechaPrestamo;
 
-        // --LocalDate una joya de libreria. aca sirve el metodo isAfter
-        // Y en las creaciones de prestamos del Main usamos LocalDate.of
-        // tambien puede ser LocalDate.now()
-
-
     } 
-    // este lo voy a eliminar si es que mas adelante
-    // inventamos un tiempo limite de plazo para los prestamos.
-    //eliminamos set de libro y socio el metodo de registrar prestamo
-    // las devoluciones
-    // son para modificar sus estados 
-    
-
-    // --- MÉTODOS ---
-
     // Método para registrar el préstamo
     public void registrarPrestamo() {
 
@@ -96,8 +75,8 @@ public class Prestamo {
     // Método para registrar la devolución 
     public void registrarDevolucion() {
 
-    if (activo && !devuelto) {  //!devuelto es como <> en sql, es una negacion por lo tanto es true si devuelto es false
-    
+    if (activo && !devuelto) {
+        
         libro.devolver();
         socio.registrarDevolucion();
 
@@ -114,6 +93,6 @@ public class Prestamo {
         System.out.println("Préstamo de libro: " + libro.getTitulo());
         System.out.println("Socio: " + socio.getNombre());
         System.out.println("Fecha de préstamo: " + fechaPrestamo);
-        System.out.println("Estado: " + (devuelto ? "Devuelto" : "No devuelto")); // if/else mas chico 
+        System.out.println("Estado: " + (devuelto ? "Devuelto" : "No devuelto"));
     }
 }

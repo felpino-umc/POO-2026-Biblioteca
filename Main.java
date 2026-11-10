@@ -3,7 +3,7 @@ import java.time.LocalDate;
 public class Main {
     public static void main(String[] args) {
 
-        // 1. Crear un Autor usando el constructor de la clase hija.
+
         Autor autor1 = new Autor(
                 "Gabriel García Márquez",
                 "Colombiano",
@@ -33,7 +33,6 @@ public class Main {
                 1828
         );
 
-        // 2. Crear un Libro y asociarlo con el Autor.
         Libro libro1 = new Libro(
                 "Cien años de soledad",
                 "978-0307474728",
@@ -58,7 +57,8 @@ public class Main {
          Libro libro4 = new Libro(
                 "Martin Rivas",
                 "978-0553383888",
-                1982, autor4
+                1982,
+                autor4
         );
 
         Libro libro5 = new Libro(
@@ -68,7 +68,6 @@ public class Main {
                 autor5
         );
 
-        // 3. Crear un Socio usando el constructor de la clase hija.
         Socio socio1 = new Socio(
                 "María López",
                 1042,
@@ -90,10 +89,10 @@ public class Main {
         personas[5] = autor4;
         personas[6] = autor5;
 
-        for(int i= 0; i<personas.length; i++){
+        for (int i= 0; i<personas.length; i++){
                 System.out.println(personas[i].toString());
             personas[i].presentarse();
-            personas[i].mostrarRol(); // aca deberian mostrar el distinto rol para cada instancia
+            personas[i].mostrarRol();
 
             if(personas[i] instanceof Autor){
                 Autor autor = (Autor) personas[i];
@@ -107,14 +106,12 @@ public class Main {
 
         }
 
-        // 4. Crear un Prestamo y asociarlo con el Libro y el Socio.
         Prestamo prestamo = new Prestamo(
                 libro1,
                 socio1,
                 LocalDate.of(2026, 7, 17)
         );
         
-        // 5 Esto es solo exploratorio para ver el flujo de prestamo y devolucion
         Prestamo prestamo2 = new Prestamo(
                 libro1,
                 socio2,
@@ -136,8 +133,6 @@ public class Main {
         prestamo2.registrarPrestamo();
         prestamo2.mostrarInfo();
     
-        // 
-
         System.out.println("\n--- VALIDACIÓN DE EMAIL ---");
 
         try {
@@ -180,7 +175,6 @@ public class Main {
         };
 
         String termino = "mar";
-        // Aca quiero probar si los libros con el like %mar% tambien los encuentra.
 
         for (int i = 0; i < buscables.length; i++) {
             System.out.println(
@@ -188,7 +182,7 @@ public class Main {
                     + " coincide con \"" + termino + "\": "
                     + buscables[i].coincideCon(termino)
             );
-        } // los tres primeros son libros y no contienen un %mar% por lo tanto false
+        }
 
                 System.out.println("\n--- IMPLEMENTACIÓN DE DOS INTERFACES ---");
 
@@ -206,6 +200,3 @@ public class Main {
         );
     }
 }
-
-        
-
