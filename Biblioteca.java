@@ -61,14 +61,24 @@ public class Biblioteca {
         if (libro == null) {
             throw new IllegalArgumentException("El libro no puede ser nulo");
         }
-        if (libros.contains(libro)) {
-            System.out.println("El libro \"" + libro.getTitulo() + "\" ya está en el catálogo.");
-            return;
+        // Se compara por ISBN: dos objetos Libro con el mismo ISBN son el mismo libro del catálogo.
+        for (Libro existente : libros) {
+            if (existente.getIsbn().equals(libro.getIsbn())) {
+                System.out.println("El libro \"" + libro.getTitulo() + "\" ya está en el catálogo.");
+                return;
+            }
         }
         libros.add(libro);
     }
 
     public void quitarLibro(Libro libro) {
+        // No se puede retirar un libro que está prestado: el préstamo activo quedaría sin catálogo.
+        for (Prestamo prestamo : prestamos) {
+            if (prestamo.isActivo() && prestamo.getLibro() == libro) {
+                System.out.println("\"" + libro.getTitulo() + "\" tiene un préstamo activo y no se puede retirar.");
+                return;
+            }
+        }
         if (libros.remove(libro)) {
             System.out.println("\"" + libro.getTitulo() + "\" fue retirado del catálogo (el objeto sigue existiendo fuera de la biblioteca).");
         } else {
@@ -151,6 +161,26 @@ public class Biblioteca {
             }
         }
         System.out.println("No hay un préstamo activo de \"" + libro.getTitulo() + "\" en " + nombre + ".");
+    }
+
+    // --- BÚSQUEDA ---
+    // Reutiliza la interfaz Buscable (C3): libros y socios se buscan con el mismo contrato.
+    public ArrayList<Buscable> buscar(String termino) {
+        if (termino == null || termino.isBlank()) {
+            throw new IllegalArgumentException("El término de búsqueda no puede estar vacío");
+        }
+        ArrayList<Buscable> resultados = new ArrayList<>();
+        for (Libro libro : libros) {
+            if (libro.coincideCon(termino)) {
+                resultados.add(libro);
+            }
+        }
+        for (Socio socio : socios) {
+            if (socio.coincideCon(termino)) {
+                resultados.add(socio);
+            }
+        }
+        return resultados;
     }
 
     // --- INFORMES ---
