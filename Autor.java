@@ -55,7 +55,7 @@ public class Autor extends Persona {
 
     // Implementación del método abstracto de Persona: comportamiento propio de Autor
     @Override
-    void mostrarRol() {
+    public void mostrarRol() {
         System.out.println(getNombre() + " participa como AUTOR: escribe los libros del catálogo.");
     }
 }

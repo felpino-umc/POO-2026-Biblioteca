@@ -44,5 +44,5 @@ public abstract class Persona {
     // Método abstracto: cada hija concreta decide cómo mostrar su rol.
     // Persona ya no se puede instanciar directamente (es abstract), y toda
     // clase que herede de ella está obligada a implementar este método.
-    abstract void mostrarRol();
+    public abstract void mostrarRol();
 }
