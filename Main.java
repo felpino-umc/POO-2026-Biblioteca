@@ -75,6 +75,9 @@ public class Main {
         biblioteca.mostrarCatalogo();
         System.out.println("Socios registrados: " + biblioteca.getCantidadSocios());
 
+        // Otro objeto con el mismo ISBN es el mismo libro: el catálogo lo rechaza.
+        biblioteca.agregarLibro(new Libro("Copia", libro1.getIsbn(), 1967, autor1));
+
         // Comprobación de independencia: al quitar un libro del catálogo,
         // el objeto sigue existiendo pero no puede prestarse en esta biblioteca.
         biblioteca.quitarLibro(libro5);
@@ -82,9 +85,15 @@ public class Main {
         System.out.println("Fuera de la biblioteca, el objeto sigue existiendo: \""
                 + libro5.getTitulo() + "\" de " + libro5.getAutor().getNombre());
 
+        System.out.println("\n--- BÚSQUEDA EN LA BIBLIOTECA (Buscable) ---");
+        System.out.println("Resultados de buscar 'mar': " + biblioteca.buscar("mar").size());
+
         // ============================================================
         // 5. COMPOSICIÓN (C4)
         // ============================================================
+
+        System.out.println("\n--- COMPOSICIÓN: Socio crea su Credencial ---");
+        System.out.println("Credencial de " + socio1.getNombre() + ": " + socio1.getCredencial());
 
         System.out.println("\n--- COMPOSICIÓN: la Biblioteca crea sus préstamos ---");
 
