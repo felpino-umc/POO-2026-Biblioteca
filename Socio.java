@@ -4,6 +4,8 @@ public class Socio extends Persona implements Buscable {
     private final int numeroSocio; // final: identifica al socio y no cambia después de crearlo
     private String email;
     private int librosPrestadosActuales;
+    // Composicion: el Socio crea su propia Credencial; no existe sin él.
+    private final Credencial credencial;
 
     // Si mantienes el contador global de socios de C1:
     private static int totalSocios = 0; //static significa que el atributo pertenece a la clase y no al objeto.
@@ -14,6 +16,7 @@ public class Socio extends Persona implements Buscable {
     public Socio(String nombre, int numeroSocio, String email) {
         super(nombre); // Llama al constructor de Persona pasándole el nombre
         this.numeroSocio = numeroSocio;
+        this.credencial = new Credencial(numeroSocio); // COMPOSICIÓN: el new ocurre aquí adentro
         setEmail(email); // reutiliza la validación del setter
         this.librosPrestadosActuales = 0;
         totalSocios++;
@@ -40,12 +43,18 @@ public class Socio extends Persona implements Buscable {
     public String toString() {
         return super.toString() + " | Socio #" + this.numeroSocio
                 + " | " + this.email
-                + " | Libros prestados: " + this.librosPrestadosActuales;
+                + " | Libros prestados: " + this.librosPrestadosActuales
+                + " | " + this.credencial;
     }
 
     // Getters y Setters
     public int getNumeroSocio() {
         return numeroSocio;
+    }
+
+    // Solo getter: la credencial no se reemplaza desde afuera (no hay setCredencial).
+    public Credencial getCredencial() {
+        return credencial;
     }
 
     public String getEmail() {
