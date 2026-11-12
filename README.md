@@ -12,6 +12,9 @@
 - Libro: Representa un libro asociado a un autor, con ISBN, año de publicación y disponibilidad.
 - Socio: Representa a un miembro de la biblioteca, con sus datos y cantidad de libros prestados.
 - Prestamo: Registra el libro prestado, el socio, la fecha del préstamo y su estado de devolución.
+- Biblioteca: Contenedor central (Cátedra 4): agrupa libros y socios, crea y administra los préstamos.
+- Credencial: Carnet del socio, creado por el propio `Socio` (composición).
+- CalculadoraMulta: Servicio que calcula la multa por atraso en una devolución (dependencia).
 
 ## Jerarquía de clases (Herencia)
 
@@ -68,21 +71,36 @@ Atributos inmutables: `Socio.numeroSocio` es `final` porque identifica al socio 
 
 `Libro` implementa `Prestable` y `Buscable` (se busca por título, ISBN o nombre del autor). `Socio` implementa `Buscable` (se busca por nombre o email). Una clase puede heredar de una sola clase pero implementar varias interfaces, por eso `Libro` cumple los dos contratos a la vez (`Prestable` y `Buscable`), y `Socio` hereda de `Persona` e implementa `Buscable`.
 
+## Relaciones entre clases (Cátedra 4)
+
+| Relación | Clases | Dónde se ve en el código | Por qué corresponde |
+|---|---|---|---|
+| **Composición** | `Socio` → `Credencial` | `new Credencial(numeroSocio)` dentro del constructor de `Socio`; no hay `setCredencial` ni parámetro `Credencial` | La credencial nace con el socio y no tiene sentido sin él |
+| **Composición** | `Biblioteca` → `Prestamo` | `new Prestamo(...)` solo ocurre en `Biblioteca.prestar()`; los préstamos viven en una lista privada de la biblioteca | Los préstamos son registros que la biblioteca crea y administra |
+| **Agregación** | `Biblioteca` → `Libro`, `Socio` | `agregarLibro`, `registrarSocio` y `quitarLibro` reciben objetos creados en `Main` y guardan su referencia | Un libro o un socio existen sin la biblioteca: al retirarlos del catálogo siguen existiendo |
+| **Asociación** | `Libro` → `Autor`; `Prestamo` → `Libro` y `Socio` | Atributos `autor`, `libro` y `socio` | Una referencia entre objetos independientes, sin relación parte–todo: el autor existiría sin el libro |
+| **Dependencia** | `Biblioteca.devolver` → `CalculadoraMulta` | La calculadora se crea como variable local en `devolver(...)`, se usa y se descarta; no es atributo | Uso temporal de un servicio para calcular la multa por atraso (plazo de 14 días, $500 por día) |
+
+Diferencia clave entre composición y agregación: en la composición el contenedor **crea** a sus partes con `new` y estas dependen de él; en la agregación el contenedor **recibe** objetos ya creados y estos siguen existiendo si el contenedor desaparece.
+
+`Biblioteca` además ofrece `buscar(String)`, que reúne libros y socios que cumplan `Buscable.coincideCon`, y evita ISBN duplicados en el catálogo.
+
+### Encapsulamiento en C4
+Todos los atributos son `private`. `Biblioteca` no expone sus listas con getters (solo cantidades), para que nadie las modifique fuera de sus métodos.
+
+### Depuración
+El registro de un episodio real de depuración está en [DEPURACION.md](DEPURACION.md).
+
 ## Funcionamiento del programa
 
-`Main` ejecuta un ejemplo completo con los siguientes datos:
+`Main` ejecuta un ejemplo completo, organizado en secciones:
 
-1. Crea al autor Gabriel García Márquez y el libro *Cien años de soledad* asociado a él.
-2. Crea a la socia María López.
-3. Arma un array `Persona[]` con el autor y la socia, y lo recorre con un `for`: imprime cada objeto (`toString()`), invoca `presentarse()` (heredado, igual en ambos) y `mostrarRol()` (**polimórfico**: mensaje distinto según el tipo real de cada objeto), y usa `instanceof` + casting para llamar a `calcularEdad()` en el autor y a `puedeSolicitarPrestamo()` en la socia.
-4. Crea un `Prestamo` con el constructor parametrizado (`Libro`, `Socio`, fecha), que marca el libro como prestado automáticamente. Registra el préstamo en el socio y muestra el estado del libro y del préstamo.
-5. Registra la devolución con una sola llamada a `prestamo.registrarDevolucion()` y muestra el estado final del libro y del socio.
+1. **Creación de objetos:** cinco autores, cinco libros y dos socios.
+2. **Polimorfismo:** un array `Persona[]` recorrido con `for`; `mostrarRol()` se comporta distinto según el tipo real del objeto, y `instanceof` + casting da acceso a los métodos propios de `Autor` y `Socio`.
+3. **Relaciones entre clases (Cátedra 4):** asociación, agregación, composición y dependencia, explicadas en la sección siguiente.
+4. **Validaciones, interfaces y búsqueda polimórfica (Cátedra 3):** setters que lanzan `IllegalArgumentException`, `Prestable` y `Buscable[]` mezclando libros y socios.
 
-Los objetos `Autor` y `Socio` se crean mediante constructores parametrizados que invocan el constructor de `Persona` con `super(nombre)`. Ambos heredan `presentarse()` y sobrescriben `toString()` reutilizando la información de la clase padre. `Autor` calcula su edad con el año actual y `Socio` controla si puede solicitar un préstamo según el límite de tres libros.
-
-`Libro` se crea disponible por defecto y mantiene la asociación con su `Autor`. Su método `mostrarInfo()` imprime los datos del libro y utiliza el `toString()` del autor. `Prestamo.registrarDevolucion()` es el **único** lugar responsable de encadenar la devolución: llama a `libro.devolver()` y a `socio.registrarDevolucion()` internamente, así que `Main` no debe repetir esas llamadas por separado (una versión anterior sí lo hacía, y el contador de libros del socio quedaba decrementado el doble).
-
-Al prestar un libro, su disponibilidad pasa a `false` y aumenta el contador de libros del socio. Al devolverlo, vuelve a estar disponible y el contador del socio disminuye. Un socio puede tener como máximo tres libros prestados simultáneamente.
+`Prestamo.registrarDevolucion()` es el único lugar que encadena la devolución (`libro.devolver()` y `socio.registrarDevolucion()`), para que el contador de libros del socio no se descuente dos veces.
 
 ## Cómo compilar y ejecutar
 ```bash
