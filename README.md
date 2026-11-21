@@ -107,3 +107,61 @@ El registro de un episodio real de depuración está en [DEPURACION.md](DEPURACI
 javac *.java
 java Main
 ```
+
+## Persistencia con JDBC y MariaDB (AWS)
+
+El catálogo de libros también se puede guardar en una base de datos MariaDB, alojada en una instancia EC2 de AWS (Ubuntu), usando JDBC con el driver `mysql-connector-j-8.3.0`. Es un ejercicio para practicar el patrón DAO sobre este proyecto.
+
+### Clases agregadas
+
+| Archivo | Rol | Principio |
+|---|---|---|
+| `ConexionBD.java` | Entrega conexiones JDBC; no conoce libros ni SQL de negocio | SRP |
+| `LibroDAO.java` | Interfaz CRUD: `crear`, `buscarPorIsbn`, `listarTodos`, `actualizar`, `eliminar` | DIP, OCP |
+| `LibroDAOImpl.java` | Implementación JDBC con `PreparedStatement` | |
+| `MainBD.java` | Demuestra las cuatro operaciones CRUD sobre `Libro` | |
+
+El resto del programa depende de la interfaz `LibroDAO` y no de JDBC, de modo que se puede agregar otra implementación sin modificar a quien la usa.
+
+Único cambio en una clase existente: `Libro` incorpora un constructor de paquete que recibe `disponible`, para que el DAO reconstruya un libro leído de la base sin llamar a `prestar()` ni `devolver()`.
+
+### Modelo de datos
+
+| Clase Java | Tabla | Relación |
+|---|---|---|
+| `Persona` (abstracta) | `persona` | Base de la herencia |
+| `Autor` | `autor` | Hereda de `persona` (misma clave primaria) |
+| `Socio` | `socio` | Hereda de `persona` (misma clave primaria) |
+| `Credencial` | `credencial` | Composición 1 a 1 con `socio` (`ON DELETE CASCADE`) |
+| `Libro` | `libro` | N a 1 con `autor`; pertenece a una `biblioteca` |
+| `Prestamo` | `prestamo` | Asocia `libro` y `socio`; pertenece a una `biblioteca` |
+| `Biblioteca` | `biblioteca` | Contenedor central |
+
+Las reglas del dominio también se reflejan en la base: plazo de 14 días y multa de $500 por día (vista `v_prestamos`), máximo de 3 préstamos activos por socio y disponibilidad del libro (triggers). `CalculadoraMulta` no tiene tabla; su lógica queda en la vista.
+
+El script `biblioteca_mariadb.sql` crea las tablas, triggers y vistas, y carga datos de muestra (6 autores, 4 socios, 7 libros y 5 préstamos). Crea la base `POO_2026_Biblioteca` (la misma que usa `ConexionBD.java`) y **borra y recrea** cualquier base con ese nombre, así que no hay que ejecutarlo si ya contiene datos propios. Para cargarlo: `sudo mysql < biblioteca_mariadb.sql`.
+
+### Configuración
+
+Los datos de conexión están como constantes en `ConexionBD.java` (`HOST`, `BASE_DATOS`, `USUARIO`, `PASSWORD`). La contraseña del repositorio es solo un valor de ejemplo: la real se configura únicamente en la instancia y no se sube a Git.
+
+El usuario necesita permisos sobre la base:
+
+```sql
+CREATE USER 'usuario'@'localhost' IDENTIFIED BY 'clave';
+GRANT ALL PRIVILEGES ON nombre_base.* TO 'usuario'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+### Compilar y ejecutar con la base de datos
+
+El archivo `mysql-connector-j-8.3.0.jar` debe estar en el classpath al ejecutar (no hace falta para compilar):
+
+```bash
+javac *.java
+java -cp ".:mysql-connector-j-8.3.0.jar" MainBD
+```
+
+En Windows el separador del classpath es `;` en lugar de `:`.
+
+`MainBD` lista el catálogo, crea el libro *Rayuela* (y a su autor, si no existe), lo busca por ISBN, lo actualiza y lo elimina. Eliminar un libro con préstamos registrados falla a propósito, porque la clave foránea lo protege.
