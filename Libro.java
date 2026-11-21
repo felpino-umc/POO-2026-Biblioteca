@@ -27,6 +27,13 @@ public class Libro implements Prestable, Buscable {
         totalLibros++;
     }
 
+    // Constructor para reconstruir un Libro leido desde la base de datos (DAO):
+    // permite restaurar el estado de disponibilidad sin llamar a prestar()/devolver().
+    Libro(String titulo, String isbn, int anioPublicacion, Autor autor, boolean disponible) {
+        this(titulo, isbn, anioPublicacion, autor);
+        this.disponible = disponible;
+    }
+
     // Getters y setters
     public String getTitulo() {
         return titulo;
