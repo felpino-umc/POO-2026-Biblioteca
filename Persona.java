@@ -1,4 +1,4 @@
-/*
+/**
  * Persona es abstracta porque una "persona" genérica no existe en el dominio de
  * la biblioteca: siempre es un Autor o un Socio. Si fuera concreta se podría
  * hacer new Persona(...) y quedaría un objeto sin rol, sin sentido. Con abstract
