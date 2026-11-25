@@ -17,6 +17,11 @@ public class Autor extends Persona {
         setAnioNacimiento(anioNacimiento); // reutiliza la validación del setter
     }
 
+    // Constructor de copia: permite entregar una copia del autor sin exponer el original.
+    public Autor(Autor otro) {
+        this(otro.getNombre(), otro.getNacionalidad(), otro.getAnioNacimiento());
+    }
+
     // Getters y setters
     public String getNacionalidad() {
         return nacionalidad;

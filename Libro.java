@@ -8,7 +8,9 @@ public class Libro implements Prestable, Buscable {
     private final String isbn; // final: identifica al libro y no cambia despues de crearlo
     private int anioPublicacion;
     private boolean disponible;
-    private Autor autor; // Asociacion: un Libro tiene un Autor.
+    // RELACIÓN: asociación — Libro referencia a Autor
+    // El autor se recibe ya creado y existe por sí mismo, con o sin el libro.
+    private Autor autor;
 
     // Contador compartido por todos los objetos Libro.
     private static int totalLibros = 0;
@@ -68,8 +70,9 @@ public class Libro implements Prestable, Buscable {
         return disponible;
     }
 
+    // Copia defensiva: modificar el objeto devuelto no cambia al autor del libro.
     public Autor getAutor() {
-        return autor;
+        return new Autor(autor);
     }
 
     public void setAutor(Autor autor) {
