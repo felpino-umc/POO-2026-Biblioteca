@@ -186,5 +186,28 @@ public class Main {
         System.out.println("Mismo objeto mediante ambas interfaces: " + (prestable == buscable));
         System.out.println("Disponible: " + prestable.isDisponible());
         System.out.println("Coincide con \"espíritus\": " + buscable.coincideCon("espíritus"));
+
+        // ============================================================
+        // 9. SOLEMNE 2: AUDITORÍA Y REFACTORIZACIÓN
+        // ============================================================
+
+        demoEncapsulamiento();
+        demoOcpDip();
+        demoSrp();
+    }
+
+    // Cap. 4: copias defensivas y vistas inmodificables (Cristian)
+    private static void demoEncapsulamiento() {
+        System.out.println("\n--- S2 · CAP. 4: ENCAPSULAMIENTO ---");
+    }
+
+    // Cap. 7: OCP y DIP con PoliticaMulta (Felipe)
+    private static void demoOcpDip() {
+        System.out.println("\n--- S2 · CAP. 7: OCP y DIP ---");
+    }
+
+    // Cap. 7: SRP con ReporteBiblioteca (Matías)
+    private static void demoSrp() {
+        System.out.println("\n--- S2 · CAP. 7: SRP ---");
     }
 }
