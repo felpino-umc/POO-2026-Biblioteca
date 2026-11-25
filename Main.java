@@ -205,6 +205,35 @@ public class Main {
     // Cap. 4: copias defensivas y vistas inmodificables (Cristian)
     private static void demoEncapsulamiento() {
         System.out.println("\n--- S2 · CAP. 4: ENCAPSULAMIENTO ---");
+
+        Socio socio = new Socio("Marta Soto", 2001, "marta.soto@correo.com");
+        Libro libro = new Libro("Martin Rivas", "978-0553383888", 1862,
+                new Autor("Alberto Blest Gana", "Chileno", 1830));
+        Biblioteca biblioteca = new Biblioteca("Biblioteca de demostración");
+        biblioteca.agregarLibro(libro);
+        biblioteca.registrarSocio(socio);
+
+        // Copia defensiva: revocar la copia no afecta al socio.
+        Credencial copia = socio.getCredencial();
+        copia.revocar();
+        System.out.println("Copia modificada: " + copia);
+        System.out.println("Original intacta: " + socio.getCredencial());
+
+        // La credencial real solo cambia a través del socio.
+        socio.revocarCredencial();
+        System.out.println("Tras revocarCredencial(): " + socio.getCredencial());
+
+        // Vista inmodificable: se puede leer, pero no alterar el catálogo.
+        try {
+            biblioteca.getLibros().add(libro);
+        } catch (UnsupportedOperationException e) {
+            System.out.println("No se puede modificar el catálogo desde afuera.");
+        }
+
+        // Polimorfismo: cada resultado se presenta sin usar instanceof.
+        for (Buscable resultado : biblioteca.buscar("mar")) {
+            System.out.println("Encontrado -> " + resultado.getEtiqueta());
+        }
     }
 
     // Cap. 7: OCP y DIP con PoliticaMulta (Felipe)
