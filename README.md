@@ -184,6 +184,11 @@ En Windows el separador del classpath es `;` en lugar de `:`.
 
 | Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
 |---|---|---|
+| 1. Clase abstracta con método abstracto | [`Persona`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Persona.java#L8) y [`mostrarRol()`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Persona.java#L47) | Se mantiene desde la Solemne 1; lo implementan `Autor` y `Socio` |
+| 2. Justificación en Javadoc | [Javadoc de `Persona`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Persona.java#L1-L7) | El comentario `/* */` pasó a Javadoc `/** */` |
+| 3. Dos interfaces con al menos 2 métodos | [`Prestable`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Prestable.java#L8-L15) (3 métodos) y [`Buscable`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Buscable.java#L8-L15) (2 métodos) | `Buscable` tenía solo `coincideCon`; se agregó `getEtiqueta()` y ambas tienen Javadoc |
+| 4. Una clase implementa ambas | [`Libro implements Prestable, Buscable`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Libro.java#L4) | `Libro` además implementa `getEtiqueta()` |
+| 5. Polimorfismo con tipo interfaz | [`Prestable prestable = libro3`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Main.java#L169-L175), [`Buscable[]`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Main.java#L179-L186) y [el recorrido de `buscar`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/44584d6/Main.java#L234) | En S2 los resultados de búsqueda se muestran con `getEtiqueta()`, sin `instanceof` |
 
 ### Capítulo 6 — Relaciones entre clases
 
