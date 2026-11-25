@@ -239,6 +239,26 @@ public class Main {
     // Cap. 7: OCP y DIP con PoliticaMulta (Felipe)
     private static void demoOcpDip() {
         System.out.println("\n--- S2 · CAP. 7: OCP y DIP ---");
+
+        Socio socio = new Socio("Pedro Rojas", 2002, "pedro.rojas@correo.com");
+        Libro libro = new Libro("Siddhartha", "978-0142437186", 1922,
+                new Autor("Hermann Hesse", "Alemán", 1877));
+        Biblioteca biblioteca = new Biblioteca("Biblioteca de demostración");
+        biblioteca.agregarLibro(libro);
+        biblioteca.registrarSocio(socio);
+
+        // 55 días prestado: 41 de atraso sobre el plazo de 14.
+        LocalDate fechaPrestamo = LocalDate.now().minusDays(55);
+
+        // DIP: se elige la implementación concreta aquí; Biblioteca solo conoce PoliticaMulta.
+        // OCP: MultaReducida se agregó sin modificar Biblioteca.
+        PoliticaMulta[] politicas = { new CalculadoraMulta(), new MultaReducida() };
+
+        for (PoliticaMulta politica : politicas) {
+            System.out.println("\n* Mismo atraso con: " + politica.getNombre());
+            biblioteca.prestar(libro, socio, fechaPrestamo);
+            biblioteca.devolver(libro, politica);
+        }
     }
 
     // Cap. 7: SRP con ReporteBiblioteca (Matías)
