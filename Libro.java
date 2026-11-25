@@ -132,4 +132,9 @@ public class Libro implements Prestable, Buscable {
                 || isbn.toLowerCase().contains(buscado)
                 || autor.getNombre().toLowerCase().contains(buscado);
     }
+
+    @Override
+    public String getEtiqueta() {
+        return "Libro: " + titulo + " — " + autor.getNombre();
+    }
 }

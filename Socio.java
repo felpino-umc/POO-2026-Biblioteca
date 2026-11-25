@@ -98,4 +98,9 @@ public class Socio extends Persona implements Buscable {
         return getNombre().toLowerCase().contains(buscado)
                 || email.toLowerCase().contains(buscado);
     }
+
+    @Override
+    public String getEtiqueta() {
+        return "Socio #" + numeroSocio + " — " + getNombre();
+    }
 }
