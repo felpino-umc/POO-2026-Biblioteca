@@ -14,7 +14,9 @@
 - Prestamo: Registra el libro prestado, el socio, la fecha del préstamo y su estado de devolución.
 - Biblioteca: Contenedor central (Cátedra 4): agrupa libros y socios, crea y administra los préstamos.
 - Credencial: Carnet del socio, creado por el propio `Socio` (composición).
-- CalculadoraMulta: Servicio que calcula la multa por atraso en una devolución (dependencia).
+- PoliticaMulta: Interfaz que define cómo se calcula la multa por atraso (dependencia).
+- CalculadoraMulta / MultaReducida: Las dos políticas de multa (estándar y reducida).
+- ReporteBiblioteca: Muestra por consola el catálogo y los préstamos.
 
 ## Jerarquía de clases (Herencia)
 
@@ -187,5 +189,39 @@ En Windows el separador del classpath es `;` en lugar de `:`.
 
 | Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
 |---|---|---|
+| **SRP** (responsabilidad única) | [`ReporteBiblioteca`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/455cbab/ReporteBiblioteca.java#L1-L48): `mostrarCatalogo`, `mostrarPrestamos`, `mostrarPrestamo`; comentario en [`Biblioteca`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/455cbab/Biblioteca.java#L18-L20) | En C4, `Biblioteca` administraba catálogo, socios y préstamos y además imprimía los reportes; `Prestamo.mostrarInfo` también imprimía. Los reportes pasaron a una clase propia: [`75cd44f`](https://github.com/felpino-umc/POO-2026-Biblioteca/commit/75cd44f), [`3568f68`](https://github.com/felpino-umc/POO-2026-Biblioteca/commit/3568f68) |
+| **OCP** (abierto/cerrado) | [`MultaReducida`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/455cbab/MultaReducida.java#L5-L34) `implements PoliticaMulta` | Regla de cobro nueva agregada como clase nueva, sin modificar `PoliticaMulta`, `CalculadoraMulta` ni `Biblioteca`. El commit [`b3c58bd`](https://github.com/felpino-umc/POO-2026-Biblioteca/commit/b3c58bd) contiene un solo archivo |
+| **DIP** (inversión de dependencias) | [`Biblioteca.devolver(Libro, LocalDate, PoliticaMulta)`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/455cbab/Biblioteca.java#L159-L196); abstracción [`PoliticaMulta`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/455cbab/PoliticaMulta.java#L3-L18); la implementación se elige en [`Main.demoOcpDip`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/455cbab/Main.java#L240-L262) | En C4, `devolver` hacía `new CalculadoraMulta()`. Ahora recibe la interfaz por parámetro: [`3a2a6ba`](https://github.com/felpino-umc/POO-2026-Biblioteca/commit/3a2a6ba), [`0887c4c`](https://github.com/felpino-umc/POO-2026-Biblioteca/commit/0887c4c) |
+
+**Responsabilidad de cada clase del dominio**
+
+| Clase | Responsabilidad |
+|---|---|
+| `Persona` | Datos y comportamiento comunes a toda persona |
+| `Autor` | Datos de quien escribe un libro |
+| `Socio` | Datos del miembro y su cupo de préstamos |
+| `Credencial` | Estado del carnet de un socio |
+| `Libro` | Datos y disponibilidad de un libro |
+| `Prestamo` | Ciclo de un préstamo (registrar y devolver) |
+| `Biblioteca` | Administrar catálogo, socios y préstamos |
+| `CalculadoraMulta` / `MultaReducida` | Una regla de cobro cada una |
+| `ReporteBiblioteca` | Presentar por consola el estado de la biblioteca |
 
 ### Qué cambió respecto de C4
+
+El tag [`C4`](https://github.com/felpino-umc/POO-2026-Biblioteca/tree/C4) marca el último commit de la Cátedra 4. La comparación completa está en [`C4...main`](https://github.com/felpino-umc/POO-2026-Biblioteca/compare/C4...main) e incluye también la capa JDBC, agregada después de C4 y fuera de esta refactorización.
+
+- **Encapsulamiento:** constantes de multa privadas, listas de `Biblioteca` como vistas inmodificables, copias defensivas de `Autor` y `Credencial`, y `Prestamo` ya no expone `Libro` ni `Socio`.
+- **Interfaces:** `Buscable` pasó de uno a dos métodos (`getEtiqueta()`).
+- **Relaciones:** comentarios `RELACIÓN:` en el código.
+- **Principios:** `PoliticaMulta`, `MultaReducida` y `ReporteBiblioteca`.
+
+### Cómo verificar
+
+```bash
+javac -encoding UTF-8 *.java
+java Main
+git log --oneline C4..HEAD
+```
+
+En la salida de `java Main`, la sección *S2 · CAP. 7: OCP y DIP* muestra el mismo atraso cobrado con dos políticas: $20500 (estándar) y $10250 (reducida).
