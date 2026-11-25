@@ -264,5 +264,19 @@ public class Main {
     // Cap. 7: SRP con ReporteBiblioteca (Matías)
     private static void demoSrp() {
         System.out.println("\n--- S2 · CAP. 7: SRP ---");
+
+        Socio socio = new Socio("Ana Torres", 2003, "ana.torres@correo.com");
+        Libro libro = new Libro("Siddhartha", "978-0142437186", 1922,
+                new Autor("Hermann Hesse", "Alemán", 1877));
+        Biblioteca biblioteca = new Biblioteca("Biblioteca de demostración");
+        biblioteca.agregarLibro(libro);
+        biblioteca.registrarSocio(socio);
+        biblioteca.prestar(libro, socio);
+
+        // SRP: Biblioteca administra; ReporteBiblioteca presenta.
+        // Si el reporte pasara a HTML, solo cambiaría ReporteBiblioteca.
+        ReporteBiblioteca reporte = new ReporteBiblioteca();
+        reporte.mostrarCatalogo(biblioteca);
+        reporte.mostrarPrestamos(biblioteca);
     }
 }
