@@ -1,5 +1,7 @@
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /*
  * Biblioteca es el contenedor central del sistema (Cátedra 4).
@@ -42,8 +44,24 @@ public class Biblioteca {
         this.nombre = nombre;
     }
 
-    // Las colecciones no se exponen con getters: solo se informan cantidades,
-    // para que nadie pueda modificar las listas por fuera de estos métodos.
+    // Protección de estado mutable (Cap. 4): las listas se exponen como VISTAS
+    // INMODIFICABLES. Quien llama puede leer el catálogo, los socios y los
+    // préstamos, pero no alterarlos sin pasar por agregarLibro/quitarLibro/
+    // registrarSocio/prestar. Un add() o remove() sobre la vista lanza
+    // UnsupportedOperationException. La vista refleja los cambios posteriores
+    // de la biblioteca (a diferencia de List.copyOf, que sería una foto fija).
+    public List<Libro> getLibros() {
+        return Collections.unmodifiableList(libros);
+    }
+
+    public List<Socio> getSocios() {
+        return Collections.unmodifiableList(socios);
+    }
+
+    public List<Prestamo> getPrestamos() {
+        return Collections.unmodifiableList(prestamos);
+    }
+
     public int getCantidadLibros() {
         return libros.size();
     }
@@ -165,7 +183,8 @@ public class Biblioteca {
 
     // --- BÚSQUEDA ---
     // Reutiliza la interfaz Buscable (C3): libros y socios se buscan con el mismo contrato.
-    public ArrayList<Buscable> buscar(String termino) {
+    // Devuelve una lista inmodificable: el resultado es de solo lectura.
+    public List<Buscable> buscar(String termino) {
         if (termino == null || termino.isBlank()) {
             throw new IllegalArgumentException("El término de búsqueda no puede estar vacío");
         }
@@ -180,7 +199,7 @@ public class Biblioteca {
                 resultados.add(socio);
             }
         }
-        return resultados;
+        return Collections.unmodifiableList(resultados);
     }
 
     // --- INFORMES ---
