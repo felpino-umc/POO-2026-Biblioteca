@@ -23,6 +23,14 @@ public class Credencial {
         this.vigente = true;
     }
 
+    // Constructor de copia: Socio entrega copias para que nadie de afuera
+    // pueda alterar la credencial original.
+    Credencial(Credencial otra) {
+        this.numero = otra.numero;
+        this.fechaEmision = otra.fechaEmision;
+        this.vigente = otra.vigente;
+    }
+
     // --- GETTERS (sin setters de numero ni fecha: son inmutables) ---
     public int getNumero() {
         return numero;

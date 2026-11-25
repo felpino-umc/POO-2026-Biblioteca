@@ -16,7 +16,9 @@ public class Socio extends Persona implements Buscable {
     public Socio(String nombre, int numeroSocio, String email) {
         super(nombre); // Llama al constructor de Persona pasándole el nombre
         this.numeroSocio = numeroSocio;
-        this.credencial = new Credencial(numeroSocio); // COMPOSICIÓN: el new ocurre aquí adentro
+        // RELACIÓN: composición — Socio crea Credencial
+        // La credencial nace con el socio, no se recibe de afuera y nadie más la guarda.
+        this.credencial = new Credencial(numeroSocio);
         setEmail(email); // reutiliza la validación del setter
         this.librosPrestadosActuales = 0;
         totalSocios++;
@@ -52,9 +54,15 @@ public class Socio extends Persona implements Buscable {
         return numeroSocio;
     }
 
-    // Solo getter: la credencial no se reemplaza desde afuera (no hay setCredencial).
+    // Copia defensiva: quien la recibe puede leerla, pero modificar la copia
+    // no cambia la credencial del socio. No hay setCredencial.
     public Credencial getCredencial() {
-        return credencial;
+        return new Credencial(credencial);
+    }
+
+    // Única vía para revocar la credencial real: pasa por su dueño.
+    public void revocarCredencial() {
+        credencial.revocar();
     }
 
     public String getEmail() {
