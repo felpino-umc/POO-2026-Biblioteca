@@ -12,8 +12,8 @@ import java.util.List;
  * - COMPOSICIÓN con Prestamo: los préstamos se crean únicamente dentro de
  *   prestar(...). Nadie fuera de Biblioteca hace new Prestamo(...), y su
  *   ciclo de vida completo (crear, registrar, devolver) ocurre aquí adentro.
- * - DEPENDENCIA con CalculadoraMulta: devolver(...) la usa como variable
- *   local para calcular la multa y la descarta; no se guarda como atributo.
+ * - DEPENDENCIA con PoliticaMulta (S2, antes CalculadoraMulta): devolver(...)
+ *   la recibe por parámetro, la usa para calcular la multa y no la guarda.
  */
 public class Biblioteca {
 
@@ -45,11 +45,11 @@ public class Biblioteca {
     }
 
     // Protección de estado mutable (Cap. 4): las listas se exponen como VISTAS
-    // INMODIFICABLES. Quien llama puede leer el catálogo, los socios y los
+    // INMODIFICABLES (no se pueden modificar desde afuera). Quien llama puede leer el catálogo, los socios y los
     // préstamos, pero no alterarlos sin pasar por agregarLibro/quitarLibro/
     // registrarSocio/prestar. Un add() o remove() sobre la vista lanza
     // UnsupportedOperationException. La vista refleja los cambios posteriores
-    // de la biblioteca (a diferencia de List.copyOf, que sería una foto fija).
+    // de la biblioteca (a diferencia de List.copyOf, que sería una snapshot).
     public List<Libro> getLibros() {
         return Collections.unmodifiableList(libros);
     }
@@ -74,7 +74,7 @@ public class Biblioteca {
         return prestamos.size();
     }
 
-    // --- AGREGACIÓN: incorporar y quitar objetos creados afuera ---
+    // --- AGREGACIÓN: incorporar y quitar objetos creados afuera
     public void agregarLibro(Libro libro) {
         if (libro == null) {
             throw new IllegalArgumentException("El libro no puede ser nulo");
@@ -115,7 +115,7 @@ public class Biblioteca {
         socios.add(socio);
     }
 
-    // --- COMPOSICIÓN: los préstamos nacen y viven dentro de la biblioteca ---
+    // --- COMPOSICIÓN: los préstamos nacen y viven dentro de la biblioteca
 
     // Sobrecarga #1: préstamo con fecha de hoy.
     public boolean prestar(Libro libro, Socio socio) {
@@ -148,30 +148,38 @@ public class Biblioteca {
         return false; // registrarPrestamo() ya informó el motivo por consola
     }
 
-    // --- DEVOLUCIÓN + DEPENDENCIA ---
+    // --- DEVOLUCIÓN + DEPENDENCIA
+
+    // DIP: Biblioteca depende de la abstracción PoliticaMulta, no de la clase
+    // concreta CalculadoraMulta. Ya no hace new CalculadoraMulta(): quien llama
+    // (Main) decide qué política aplicar y la entrega como parámetro. Así una
+    // política nueva (p. ej. MultaReducida) funciona sin modificar Biblioteca.
+    // RELACIÓN: dependencia — Biblioteca usa PoliticaMulta (la recibe por
+    // parámetro en devolver(...), la usa y no la guarda como atributo).
 
     // Sobrecarga #1: devolución con fecha de hoy.
-    public void devolver(Libro libro) {
-        devolver(libro, LocalDate.now());
+    public void devolver(Libro libro, PoliticaMulta politica) {
+        devolver(libro, LocalDate.now(), politica);
     }
 
     // Sobrecarga #2: devolución con fecha explícita.
-    public void devolver(Libro libro, LocalDate fechaDevolucion) {
+    public void devolver(Libro libro, LocalDate fechaDevolucion, PoliticaMulta politica) {
         if (libro == null || fechaDevolucion == null) {
             throw new IllegalArgumentException("El libro y la fecha de devolución no pueden ser nulos");
+        }
+        if (politica == null) {
+            throw new IllegalArgumentException("La política de multa no puede ser nula");
         }
         for (Prestamo prestamo : prestamos) {
             if (prestamo.isActivo() && prestamo.esDelLibro(libro)) {
 
-                // DEPENDENCIA: CalculadoraMulta se crea como variable local,
-                // se usa y se descarta. No es atributo de Biblioteca.
-                CalculadoraMulta calculadora = new CalculadoraMulta();
-                long multa = calculadora.calcular(prestamo, fechaDevolucion);
+                // Uso temporal de la abstracción: al ser una abstracción valga la redundancia no importa qué clase concreta es.
+                long multa = politica.calcular(prestamo, fechaDevolucion);
 
                 prestamo.registrarDevolucion();
 
                 if (multa > 0) {
-                    System.out.println("Devolución con atraso. Multa: $" + multa);
+                    System.out.println("Devolución con atraso (" + politica.getNombre() + "). Multa: $" + multa);
                 } else {
                     System.out.println("Devolución dentro del plazo, sin multa.");
                 }

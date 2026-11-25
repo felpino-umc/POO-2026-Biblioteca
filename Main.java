@@ -103,8 +103,12 @@ public class Main {
         System.out.println("\n* Marcelo intenta pedir el mismo libro:");
         biblioteca.prestar(libro1, socio2);
 
+        // DIP: Main elige la implementación concreta y la entrega a Biblioteca
+        // como PoliticaMulta (tipo interfaz).
+        PoliticaMulta politicaEstandar = new CalculadoraMulta();
+
         System.out.println("\n* María devuelve el libro:");
-        biblioteca.devolver(libro1);
+        biblioteca.devolver(libro1, politicaEstandar);
 
         System.out.println("\n* Marcelo vuelve a pedirlo:");
         biblioteca.prestar(libro1, socio2);
@@ -124,7 +128,7 @@ public class Main {
         biblioteca.prestar(libro2, socio1, LocalDate.of(2026, 10, 1));
 
         System.out.println("\n* Lo devuelve recién hoy:");
-        biblioteca.devolver(libro2);
+        biblioteca.devolver(libro2, politicaEstandar);
 
         // ============================================================
         // 7. VALIDACIONES (C3 + corrección C4)

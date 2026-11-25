@@ -4,9 +4,9 @@ import java.time.temporal.ChronoUnit;
 /*
  * Política estándar de multas por atraso.
  *
- * Esta clase existe para demostrar DEPENDENCIA (Cátedra 4): quien la usa
- * (Biblioteca.devolver) la crea como variable local, invoca calcular(...) y
- * la descarta. Nadie la mantiene como atributo.
+ * Es una implementación concreta de PoliticaMulta. Desde S2 (DIP) Biblioteca
+ * ya no la crea: Main la instancia y la entrega a Biblioteca.devolver(...)
+ * como PoliticaMulta, que la usa por parámetro y no la guarda como atributo.
  */
 // RELACIÓN: dependencia — CalculadoraMulta usa Prestamo (solo como parámetro, no lo guarda)
 public class CalculadoraMulta implements PoliticaMulta {
