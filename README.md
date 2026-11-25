@@ -81,14 +81,14 @@ Atributos inmutables: `Socio.numeroSocio` es `final` porque identifica al socio 
 | **Composición** | `Biblioteca` → `Prestamo` | `new Prestamo(...)` solo ocurre en `Biblioteca.prestar()`; los préstamos viven en una lista privada de la biblioteca | Los préstamos son registros que la biblioteca crea y administra |
 | **Agregación** | `Biblioteca` → `Libro`, `Socio` | `agregarLibro`, `registrarSocio` y `quitarLibro` reciben objetos creados en `Main` y guardan su referencia | Un libro o un socio existen sin la biblioteca: al retirarlos del catálogo siguen existiendo |
 | **Asociación** | `Libro` → `Autor`; `Prestamo` → `Libro` y `Socio` | Atributos `autor`, `libro` y `socio` | Una referencia entre objetos independientes, sin relación parte–todo: el autor existiría sin el libro |
-| **Dependencia** | `Biblioteca.devolver` → `CalculadoraMulta` | La calculadora se crea como variable local en `devolver(...)`, se usa y se descarta; no es atributo | Uso temporal de un servicio para calcular la multa por atraso (plazo de 14 días, $500 por día) |
+| **Dependencia** | `Biblioteca.devolver` → `PoliticaMulta` | La política llega como parámetro en `devolver(...)`, se usa y no se guarda como atributo | Uso temporal de un servicio para calcular la multa por atraso |
 
 Diferencia clave entre composición y agregación: en la composición el contenedor **crea** a sus partes con `new` y estas dependen de él; en la agregación el contenedor **recibe** objetos ya creados y estos siguen existiendo si el contenedor desaparece.
 
 `Biblioteca` además ofrece `buscar(String)`, que reúne libros y socios que cumplan `Buscable.coincideCon`, y evita ISBN duplicados en el catálogo.
 
 ### Encapsulamiento en C4
-Todos los atributos son `private`. `Biblioteca` no expone sus listas con getters (solo cantidades), para que nadie las modifique fuera de sus métodos.
+Todos los atributos son `private`. `Biblioteca` expone sus listas solo como vistas inmodificables, para que nadie las modifique fuera de sus métodos.
 
 ### Depuración
 El registro de un episodio real de depuración está en [DEPURACION.md](DEPURACION.md).
@@ -194,6 +194,12 @@ En Windows el separador del classpath es `;` en lugar de `:`.
 
 | Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
 |---|---|---|
+| **Composición**: `RELACIÓN: composición — Socio crea Credencial` | [constructor de `Socio`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Socio.java#L19-L21) | La credencial nace con el socio. En S2 `getCredencial()` entrega una copia. Secundaria: [`Biblioteca` crea `Prestamo`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Biblioteca.java#L31-L33), con el `new` en [`prestar`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Biblioteca.java#L146-L151) |
+| **Agregación**: `RELACIÓN: agregación — Biblioteca agrupa Libro y Socio` | [atributos de `Biblioteca`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Biblioteca.java#L25-L27), [`agregarLibro`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Biblioteca.java#L84-L95) y [`registrarSocio`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Biblioteca.java#L113-L121) | Recibe objetos ya creados. En S2 se agregó el comentario y las listas se exponen como vistas inmodificables |
+| **Asociación**: `RELACIÓN: asociación — Libro referencia a Autor` | [`Libro.autor`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Libro.java#L11-L13) y [`Prestamo.libro` y `socio`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Prestamo.java#L6-L11) | Objetos independientes. En S2 `Libro.getAutor()` entrega una copia y `Prestamo` ya no expone `getLibro()` ni `getSocio()` |
+| **Dependencia**: `RELACIÓN: dependencia — Biblioteca usa PoliticaMulta` | [`Biblioteca.devolver`](https://github.com/felpino-umc/POO-2026-Biblioteca/blob/8d76123/Biblioteca.java#L159-L196) | En C4 creaba una `CalculadoraMulta` como variable local; ahora recibe una `PoliticaMulta` por parámetro y no la guarda |
+
+`Main` ejecuta las cuatro relaciones en sus secciones 3 a 6.
 
 ### Capítulo 7 — Principios SRP, OCP y DIP
 
