@@ -22,11 +22,15 @@ public class Biblioteca {
     // --- ATRIBUTOS ---
     private String nombre;
 
-    // Agregación: colecciones de objetos creados externamente.
+    // RELACIÓN: agregación — Biblioteca agrupa Libro y Socio
+    // (los recibe ya creados desde afuera y los guarda por referencia;
+    // si la biblioteca desaparece, los libros y socios siguen existiendo).
     private ArrayList<Libro> libros = new ArrayList<>();
     private ArrayList<Socio> socios = new ArrayList<>();
 
-    // Composición: la biblioteca crea y administra sus préstamos.
+    // RELACIÓN: composición — Biblioteca crea Prestamo
+    // (el new Prestamo(...) ocurre solo en prestar(); los préstamos no existen
+    // fuera de la biblioteca y desaparecen con ella).
     private ArrayList<Prestamo> prestamos = new ArrayList<>();
 
     // --- CONSTRUCTOR ---
@@ -88,7 +92,7 @@ public class Biblioteca {
                 return;
             }
         }
-        libros.add(libro);
+        libros.add(libro); // agregación: se guarda la referencia a un libro creado afuera
     }
 
     public void quitarLibro(Libro libro) {
@@ -114,7 +118,7 @@ public class Biblioteca {
             System.out.println("El socio " + socio.getNombre() + " ya está registrado.");
             return;
         }
-        socios.add(socio);
+        socios.add(socio); // agregación: se guarda la referencia a un socio creado afuera
     }
 
     // --- COMPOSICIÓN: los préstamos nacen y viven dentro de la biblioteca
@@ -139,7 +143,7 @@ public class Biblioteca {
             return false;
         }
 
-        // Punto clave de la composición: el new Prestamo(...) ocurre SOLO aquí.
+        // Composición: el new Prestamo(...) ocurre SOLO aquí; nadie fuera de Biblioteca crea préstamos.
         Prestamo prestamo = new Prestamo(libro, socio, fechaPrestamo);
         prestamo.registrarPrestamo(); // valida disponibilidad y cupo del socio
 

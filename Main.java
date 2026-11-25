@@ -45,7 +45,7 @@ public class Main {
         }
 
         // ============================================================
-        // 3. ASOCIACIÓN (C4)
+        // 3. RELACIÓN: asociación — Libro referencia a Autor (C4)
         // ============================================================
 
         System.out.println("\n--- ASOCIACIÓN: Libro -> Autor ---");
@@ -56,7 +56,7 @@ public class Main {
                 + autor1.getNombre() + " seguiría existiendo sin el libro.");
 
         // ============================================================
-        // 4. AGREGACIÓN (C4)
+        // 4. RELACIÓN: agregación — Biblioteca agrupa Libro y Socio (C4)
         // ============================================================
 
         System.out.println("\n--- AGREGACIÓN: Biblioteca agrupa libros y socios ---");
@@ -91,7 +91,7 @@ public class Main {
         System.out.println("Resultados de buscar 'mar': " + biblioteca.buscar("mar").size());
 
         // ============================================================
-        // 5. COMPOSICIÓN (C4)
+        // 5. RELACIÓN: composición — Socio crea Credencial / Biblioteca crea Prestamo (C4)
         // ============================================================
 
         System.out.println("\n--- COMPOSICIÓN: Socio crea su Credencial ---");
@@ -119,7 +119,7 @@ public class Main {
         reporte.mostrarPrestamos(biblioteca);
 
         // ============================================================
-        // 6. DEPENDENCIA (C4)
+        // 6. RELACIÓN: dependencia — Biblioteca usa PoliticaMulta (C4, DIP en S2)
         // ============================================================
 
         System.out.println("--- DEPENDENCIA: cálculo de multa en la devolución ---");
