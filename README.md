@@ -165,3 +165,27 @@ java -cp ".:mysql-connector-j-8.3.0.jar" MainBD
 En Windows el separador del classpath es `;` en lugar de `:`.
 
 `MainBD` lista el catálogo, crea el libro *Rayuela* (y a su autor, si no existe), lo busca por ISBN, lo actualiza y lo elimina. Eliminar un libro con préstamos registrados falla a propósito, porque la clave foránea lo protege.
+
+## Solemne 2 — Tabla de cumplimiento
+
+### Capítulo 4 — Encapsulamiento
+
+| Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
+|---|---|---|
+
+### Capítulo 5 — Abstracción e interfaces
+
+| Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
+|---|---|---|
+
+### Capítulo 6 — Relaciones entre clases
+
+| Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
+|---|---|---|
+
+### Capítulo 7 — Principios SRP, OCP y DIP
+
+| Indicador | Ubicación en el código | Evidencia / cambio respecto de C4 |
+|---|---|---|
+
+### Qué cambió respecto de C4
