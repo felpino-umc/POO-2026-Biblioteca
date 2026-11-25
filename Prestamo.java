@@ -107,11 +107,6 @@ public class Prestamo {
         }
     }
 
-    // Método para mostrar la información en consola
-    public void mostrarInfo() {
-        System.out.println("Préstamo de libro: " + libro.getTitulo());
-        System.out.println("Socio: " + socio.getNombre());
-        System.out.println("Fecha de préstamo: " + fechaPrestamo);
-        System.out.println("Estado: " + (devuelto ? "Devuelto" : "No devuelto"));
-    }
+    // SRP (S2): mostrarInfo() se movió a ReporteBiblioteca.mostrarPrestamo(...).
+    // Prestamo solo registra el ciclo de vida del préstamo.
 }

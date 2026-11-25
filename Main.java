@@ -72,7 +72,9 @@ public class Main {
         biblioteca.registrarSocio(socio1);
         biblioteca.registrarSocio(socio2);
 
-        biblioteca.mostrarCatalogo();
+        // SRP: la presentación la hace ReporteBiblioteca, no Biblioteca.
+        ReporteBiblioteca reporte = new ReporteBiblioteca();
+        reporte.mostrarCatalogo(biblioteca);
         System.out.println("Socios registrados: " + biblioteca.getCantidadSocios());
 
         // Otro objeto con el mismo ISBN es el mismo libro: el catálogo lo rechaza.
@@ -114,7 +116,7 @@ public class Main {
         biblioteca.prestar(libro1, socio2);
 
         System.out.println();
-        biblioteca.mostrarPrestamos();
+        reporte.mostrarPrestamos(biblioteca);
 
         // ============================================================
         // 6. DEPENDENCIA (C4)

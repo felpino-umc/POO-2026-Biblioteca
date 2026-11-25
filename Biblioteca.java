@@ -15,6 +15,8 @@ import java.util.List;
  * - DEPENDENCIA con PoliticaMulta (S2, antes CalculadoraMulta): devolver(...)
  *   la recibe por parámetro, la usa para calcular la multa y no la guarda.
  */
+// SRP: Biblioteca solo administra catálogo, socios y préstamos. La presentación
+// por consola (catálogo y listado de préstamos) es responsabilidad de ReporteBiblioteca.
 public class Biblioteca {
 
     // --- ATRIBUTOS ---
@@ -210,21 +212,6 @@ public class Biblioteca {
         return Collections.unmodifiableList(resultados);
     }
 
-    // --- INFORMES ---
-    public void mostrarCatalogo() {
-        System.out.println("Catálogo de " + nombre + " (" + libros.size() + " libros):");
-        for (Libro libro : libros) {
-            System.out.println("  - " + libro.getTitulo()
-                    + " | " + libro.getAutor().getNombre()
-                    + " | " + (libro.isDisponible() ? "disponible" : "prestado"));
-        }
-    }
-
-    public void mostrarPrestamos() {
-        System.out.println("Préstamos emitidos por " + nombre + ": " + prestamos.size());
-        for (Prestamo prestamo : prestamos) {
-            prestamo.mostrarInfo();
-            System.out.println("  ---");
-        }
-    }
+    // SRP (S2): mostrarCatalogo() y mostrarPrestamos() se movieron a
+    // ReporteBiblioteca. Biblioteca ya no decide cómo se presentan los datos.
 }
