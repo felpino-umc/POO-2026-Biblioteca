@@ -92,7 +92,7 @@ public class Biblioteca {
     public void quitarLibro(Libro libro) {
         // No se puede retirar un libro que está prestado: el préstamo activo quedaría sin catálogo.
         for (Prestamo prestamo : prestamos) {
-            if (prestamo.isActivo() && prestamo.getLibro() == libro) {
+            if (prestamo.isActivo() && prestamo.esDelLibro(libro)) {
                 System.out.println("\"" + libro.getTitulo() + "\" tiene un préstamo activo y no se puede retirar.");
                 return;
             }
@@ -161,7 +161,7 @@ public class Biblioteca {
             throw new IllegalArgumentException("El libro y la fecha de devolución no pueden ser nulos");
         }
         for (Prestamo prestamo : prestamos) {
-            if (prestamo.isActivo() && prestamo.getLibro() == libro) {
+            if (prestamo.isActivo() && prestamo.esDelLibro(libro)) {
 
                 // DEPENDENCIA: CalculadoraMulta se crea como variable local,
                 // se usa y se descarta. No es atributo de Biblioteca.

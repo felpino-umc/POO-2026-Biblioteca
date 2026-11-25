@@ -3,8 +3,12 @@ import java.time.LocalDate;
 public class Prestamo {
 
     // --- ATRIBUTOS ---
-    private Libro libro;
-    private Socio socio;
+    // RELACIÓN: asociación — Prestamo referencia a Libro y Socio
+    // (ambos existen por sí mismos antes y después del préstamo; el préstamo
+    // solo los vincula, no los crea ni los posee). Son final: un préstamo no
+    // cambia de libro ni de socio una vez creado.
+    private final Libro libro;
+    private final Socio socio;
     private LocalDate fechaPrestamo;
     private boolean devuelto = false;
     private boolean activo = false;
@@ -22,12 +26,25 @@ public class Prestamo {
 
     // Getters y setters
 
-    public Libro getLibro() {
-        return libro;
+    // Protección de estado mutable (Cap. 4): Prestamo ya no expone getLibro()
+    // ni getSocio(). Con esos getters, quien tuviera un préstamo podía hacer
+    // getLibro().prestar() o getSocio().registrarPrestamo() y desincronizar el
+    // estado. Ahora solo entrega los datos que se necesitan leer.
+    public String getTituloLibro() {
+        return libro.getTitulo();
     }
 
-    public Socio getSocio() {
-        return socio;
+    public String getNombreSocio() {
+        return socio.getNombre();
+    }
+
+    public boolean isDevuelto() {
+        return devuelto;
+    }
+
+    // Reemplaza la comparación prestamo.getLibro() == libro que hacía Biblioteca.
+    public boolean esDelLibro(Libro libro) {
+        return this.libro == libro;
     }
 
     public LocalDate getFechaPrestamo() {
